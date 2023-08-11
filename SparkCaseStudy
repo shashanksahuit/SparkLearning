@@ -1,3 +1,4 @@
+
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
 
@@ -43,6 +44,5 @@ public class DBSpark {
                         functions.sum(functions.col("Profit_double")).alias("Total Profit"))
                 .sort(functions.col("year"), functions.col("month"));
         return joinedDfWithYearAndMonth;
-
     }
 }
