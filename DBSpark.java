@@ -1,13 +1,14 @@
+package com.bdec.training.javasparkl2;
 
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
 
 public class DBSpark {
     public static void main(String[] args) {
+
         String sourcePathSales = args[0];
         String sourcePathReturns = args[1];
-        String targetTableForOutPut = args[1];
-
+        String targetTableForOutPut = args[2];
 
         SparkSession spark = SparkSession.builder()
                 .appName("DBTraining")
@@ -25,7 +26,9 @@ public class DBSpark {
                 .load(sourcePathReturns);
 
         Dataset<Row> finalResultDf = calculateTotalProfitAndTotalQuantity(dfSrc,dfReturns);
-        finalResultDf.write().mode(SaveMode.Append).partitionBy("year", "month").format("CSV").saveAsTable(targetTableForOutPut);
+        finalResultDf.write().mode(SaveMode.Overwrite)
+               .partitionBy("year", "month")
+                .format("CSV").option("path",targetTableForOutPut).save();
     }
 
     public  static Dataset<Row> calculateTotalProfitAndTotalQuantity(Dataset<Row> dfSrc, Dataset<Row> dfReturns) {
